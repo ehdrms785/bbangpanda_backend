@@ -1,0 +1,19 @@
+{
+  "name": "bbangnarae_project",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "dev": ""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ehdrms785/bnr_backend.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ehdrms785/bnr_backend/issues"
+  },
+  "homepage": "https://github.com/ehdrms785/bnr_backend#readme"
+}
