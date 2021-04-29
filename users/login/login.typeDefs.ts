@@ -3,10 +3,11 @@ import { gql } from "apollo-server-core";
 export default gql`
   type LoginResult {
     ok: Boolean!
-    token: String
-    expiredTime: Int
-    refreshToken: String
     error: String
+    customToken: String
+    customTokenExpired: Int
+    refreshToken: String
+    refreshTokenExpired: Int
   }
   type Mutation {
     login(email: String, phonenumber: String, password: String!): LoginResult!

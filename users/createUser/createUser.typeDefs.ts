@@ -5,6 +5,9 @@ export default gql`
     ok: Boolean!
     error: String
     customToken: String
+    customTokenExpired: Int
+    refreshToken: String
+    refreshTokenExpired: Int
   }
   type Mutation {
     createUser(

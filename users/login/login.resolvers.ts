@@ -1,11 +1,13 @@
+import { makeErrorMessage } from "../../shared/shared.utils";
 import { Resolvers } from "../../types";
-import admin from "firebase-admin";
 import {
+  calcExpiredTime,
   comparePassword,
   encryptToken,
-  getAccessToken,
+  getCustomToken,
   getRefreshToken,
   refTokenExtractKey,
+  userRefTokenKeyUpdate,
 } from "../users.utils";
 
 const LoginMutation: Resolvers = {
@@ -24,14 +26,16 @@ const LoginMutation: Resolvers = {
       { client }
     ) => {
       try {
-        let user = null;
         if (!email && !phonenumber) {
           return {
             ok: false,
-            error: "X00010",
+            error: makeErrorMessage(
+              "X00010",
+              "휴대폰번호나 이메일 둘 중 하나는 입력되어야 합니다."
+            ),
           };
         }
-        user = await client.user.findFirst({
+        const user = await client.user.findFirst({
           where: {
             ...(phonenumber && { phonenumber }),
             ...(email && { email: email.toLowerCase() }),
@@ -44,42 +48,36 @@ const LoginMutation: Resolvers = {
         if (!user) {
           return {
             ok: false,
-            error: "X00011",
+            error: makeErrorMessage(
+              "X00011",
+              "해당 이메일 혹은 휴대폰번호를 가진 유저가 없습니다"
+            ),
           };
         }
         const passwordCheck = await comparePassword(password, user.password);
         if (!passwordCheck) {
           return {
             ok: false,
-            error: "X00012",
+            error: makeErrorMessage("X00012", "비밀번호 오류"),
           };
         }
-        const accessToken = await getAccessToken(user.id);
-        const expiredTime = Math.floor(Date.now() / 1000) + 1800;
-        console.log(`expiredTime: ${expiredTime}`);
+        const customToken = await getCustomToken(user.id);
         const refreshToken = await getRefreshToken(user.id);
-        const encryptedRefreshToken = encryptToken(refreshToken);
-        const refTokenKey = refTokenExtractKey(encryptedRefreshToken);
+        const refTokenKey = refTokenExtractKey(refreshToken);
         //
-        await client.user.update({
-          where: {
-            id: user.id,
-          },
-          data: {
-            refToken: refTokenKey,
-          },
-          select: {
-            id: true,
-          },
-        });
-        // admin.auth().getUser(user.id.toString()).to
-        // admin.auth().verifyIdToken()
-        // admin.auth().
+        await userRefTokenKeyUpdate(user.id, refTokenKey);
+        const customTokenExpired = calcExpiredTime(
+          `${process.env.CSTOKEN_EXPIRED}`
+        );
+        const refreshTokenExpired = calcExpiredTime(
+          `${process.env.REFTOKEN_EXPIRED}`
+        );
         return {
           ok: true,
-          token: accessToken,
-          expiredTime,
-          refreshToken: encryptedRefreshToken,
+          customToken,
+          customTokenExpired,
+          refreshToken,
+          refreshTokenExpired,
         };
       } catch (e) {
         return {

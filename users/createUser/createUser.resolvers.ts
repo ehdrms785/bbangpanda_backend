@@ -1,7 +1,17 @@
 import { Resolvers } from "../../types";
-import bcrypt from "bcrypt";
 import admin from "firebase-admin";
-import { createRequest } from "@graphql-tools/delegate";
+
+import {
+  calcExpiredTime,
+  convertPhoneNumber,
+  encryptToken,
+  getCustomToken,
+  getRefreshToken,
+  hashingPassword,
+  refTokenExtractKey,
+  userRefTokenKeyUpdate,
+} from "../users.utils";
+import { makeErrorMessage } from "../../shared/shared.utils";
 const CreateUserMutation: Resolvers = {
   Mutation: {
     createUser: async (
@@ -22,6 +32,14 @@ const CreateUserMutation: Resolvers = {
       { client }
     ) => {
       try {
+        console.log("회원가입 요청");
+        if (!username || !email || !phonenumber || !password) {
+          return {
+            ok: false,
+            error: makeErrorMessage("X00020", "필수 입력값을 입력 해 주세요"),
+          };
+        }
+        email = email.toLowerCase();
         const userExist = await client.user.findFirst({
           where: {
             OR: [
@@ -32,7 +50,7 @@ const CreateUserMutation: Resolvers = {
                 phonenumber,
               },
               {
-                email: email.toLowerCase(),
+                email,
               },
             ],
           },
@@ -40,17 +58,18 @@ const CreateUserMutation: Resolvers = {
         if (userExist) {
           return {
             ok: false,
-            error: "X00020",
+            error: makeErrorMessage(
+              "X00021",
+              "입력하신 정보를 가진 유저가 이미 존재합니다."
+            ),
           };
         }
-        const hashedPassword = await bcrypt.hash(
-          password,
-          Number(process.env.HASHCOUNT)
-        );
+        const hashedPassword = await hashingPassword(password);
+
         const createdUser = await client.user.create({
           data: {
             username,
-            email: email.toLowerCase(),
+            email,
             address,
             phonenumber,
             password: hashedPassword,
@@ -61,55 +80,61 @@ const CreateUserMutation: Resolvers = {
             phonenumber: true,
           },
         });
+
+        //파이어 베이스 회원가입
+
         const updateParams = {
           uid: createdUser.id.toString(),
           email: createdUser.email,
-          phoneNumber: `+82${createdUser.phonenumber.replace("0", "")}`,
+          phoneNumber: convertPhoneNumber(createdUser.phonenumber),
         };
         console.log(
-          `phoneNumber: +82${createdUser.phonenumber.replace("0", "")}`
+          `phoneNumber: ${convertPhoneNumber(createdUser.phonenumber)}`
         );
-        var user;
-        //
         try {
-          user = await admin.auth().createUser(updateParams as any);
+          await admin.auth().createUser(updateParams as any);
         } catch (err) {
           console.log(err);
+          await client.user.delete({
+            where: {
+              id: createdUser.id,
+            },
+          });
           return {
             ok: false,
             error: "파이어베이스 회원가입실패",
           };
         }
-        // console.log(user);
-        // try {
-        //   user = await admin.auth().getUserByEmail(email);
-        // } catch (err) {
-        //   console.log(err);
+        const customToken = await getCustomToken(createdUser.id);
+        const refreshToken = await getRefreshToken(createdUser.id);
+        const refTokenKey = refTokenExtractKey(refreshToken);
+        //
+        await userRefTokenKeyUpdate(createdUser.id, refTokenKey);
 
-        // }
-        //  try {
+        console.log(`customToken:${customToken}`);
+        console.log(`refreshToken: ${refreshToken}`);
 
-        //   var uid = (await admin.auth().getUserByEmail("firebase@naver.com")).uid;
-        //   console.log(`uid: ${uid}`);
-        //  } catch( e) {
-
-        //  }
-        // admin.auth().deleteUser(uid);
-        // // console.log(`userId:${user.uid}`);
-        // return {
-        //   ok: true,
-        // };
-        const customToken = await admin.auth().createCustomToken(user.uid);
-        // console.log(`customToken:${customToken}`);
+        const customTokenExpired = calcExpiredTime(
+          `${process.env.CSTOKEN_EXPIRED}`
+        );
+        const refreshTokenExpired = calcExpiredTime(
+          `${process.env.REFTOKEN_EXPIRED}`
+        );
         return {
           ok: true,
           customToken,
+          customTokenExpired,
+          refreshToken,
+          refreshTokenExpired,
         };
       } catch (e) {
         console.log(e);
         return {
           ok: false,
-          error: "X00021",
+          error: makeErrorMessage(
+            "X00022",
+            "같은 오류가 반복된다면 관리자에게 문의 해 주세요."
+          ),
         };
       }
     },
