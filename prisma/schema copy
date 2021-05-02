@@ -26,9 +26,9 @@ model User {
   updatedAt    DateTime @updatedAt
   /// @onDelete(CASCADE)
   ownBreads    Bread[]  @relation("ownBreads")
+  ownBakery    Bakery?
   boughtBreads Bread[]
   myCarts      Cart[]
-  ownBakery    Bakery?  @relation("ownBakery")
 }
 
 model Bread {
@@ -41,6 +41,7 @@ model Bread {
   updatedAt         DateTime @updatedAt
   // 시그니처 메뉴인지
   isSigniture       Boolean  @default(false)
+  /// @onDelete(CASCADE)
   bakery            Bakery?  @relation("bakeryToBread", fields: [bakeryId], references: [id])
   bakeryId          Int?
   owner             User?    @relation("ownBreads", fields: [ownerId], references: [id])
@@ -57,7 +58,8 @@ model Bakery {
   detailDescription String?
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
-  owner             User?    @relation("ownBakery", fields: [ownerId], references: [id])
+  /// @onDelete(CASCADE)
+  owner             User?    @relation(fields: [ownerId], references: [id])
   ownerId           Int?
   breads            Bread[]  @relation("bakeryToBread")
   carts             Cart[]
@@ -69,6 +71,7 @@ model Cart {
   updatedAt DateTime @updatedAt
   userId    Int
   bakeryId  Int
+  /// @onDelete(CASCADE)
   user      User?    @relation(fields: [userId], references: [id])
   bakery    Bakery?  @relation(fields: [bakeryId], references: [id])
   breads    Bread[]

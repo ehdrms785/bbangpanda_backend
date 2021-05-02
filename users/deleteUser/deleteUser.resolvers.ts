@@ -29,22 +29,34 @@ const DeleteUserMutation: Resolvers = {
             };
           }
           let user;
+          console.log(loggedInUser?.id);
+          console.log(phonenumber);
+
           try {
             user = await client.user.findUnique({
               where: {
-                id: loggedInUser?.id,
                 phonenumber,
               },
               select: {
                 id: true,
+                phonenumber: true,
                 password: true,
               },
             });
+            if (user?.id !== loggedInUser?.id) {
+              return {
+                ok: false,
+                error: makeErrorMessage(
+                  "X00016-1",
+                  "현재 로그인 한 계정이 아닙니다"
+                ),
+              };
+            }
           } catch (err) {
             return {
               ok: false,
               error: makeErrorMessage(
-                "X00016-1",
+                "X00016-2",
                 "해당 계정의 정보가 일치하지 않습니다."
               ),
             };
@@ -62,6 +74,11 @@ const DeleteUserMutation: Resolvers = {
               error: makeErrorMessage("X00018", "비밀번호 오류"),
             };
           }
+          await client.user.delete({
+            where: {
+              id: user.id,
+            },
+          });
           const firebaseUser = await getFirebaseUser(user.id);
           if (!firebaseUser) {
             return {
@@ -71,11 +88,6 @@ const DeleteUserMutation: Resolvers = {
           }
           await deleteFirebaseUser(user.id);
 
-          await client.user.delete({
-            where: {
-              id: user.id,
-            },
-          });
           return {
             ok: true,
           };
