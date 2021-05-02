@@ -1,14 +1,14 @@
 require("dotenv").config();
 import { ApolloServer } from "apollo-server-express";
-import express, { json, response } from "express";
+import express, { json, response, urlencoded } from "express";
 import { resolvers, typeDefs } from "./schema";
 import logger from "morgan";
 import http from "http";
 import client from "./client";
-import { getUser, protectResolver } from "./users/users.utils";
-import bodyParser, { urlencoded } from "body-parser";
+import { getUser } from "./users/users.utils";
+
 import "./firebase/firebase_admin";
-const kakao_auth = require("./kakao_auth.ts");
+
 const PORT = process.env.PORT;
 
 const apollo = new ApolloServer({
@@ -46,6 +46,7 @@ const app = express();
 app.use(logger("tiny"));
 app.use(express.json());
 app.use(urlencoded({ extended: true }));
+
 // app.use(bodyParser.urlencoded({ extended: true }));
 // app.use(bodyParser.json());
 apollo.applyMiddleware({ app });

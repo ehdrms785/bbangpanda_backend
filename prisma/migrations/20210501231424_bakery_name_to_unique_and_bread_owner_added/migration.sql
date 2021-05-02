@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "Bread" ALTER COLUMN "ownerId" SET DEFAULT 65;

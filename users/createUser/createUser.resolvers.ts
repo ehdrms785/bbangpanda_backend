@@ -95,6 +95,7 @@ const CreateUserMutation: Resolvers = {
           await admin.auth().createUser(updateParams as any);
         } catch (err) {
           console.log(err);
+          console.log("야호");
           await client.user.delete({
             where: {
               id: createdUser.id,

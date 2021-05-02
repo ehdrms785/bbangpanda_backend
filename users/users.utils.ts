@@ -103,7 +103,7 @@ export const getRefreshToken = async (id: number): Promise<string> => {
     },
     `${process.env.SECRET_KEY}`,
     {
-      expiresIn: `${process.env.REFTOKEN_EXPIRE}`,
+      expiresIn: `${process.env.REFTOKEN_EXPIRED}`,
     }
   );
   const encryptedRefreshToken = encryptToken(refreshToken);
