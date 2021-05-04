@@ -48,7 +48,7 @@ const ToggleDibsBreadMutation: Resolvers = {
               id: loggedInUser?.id,
             },
             data: {
-              dibsBread: {
+              dibsBreads: {
                 ...(userAlreadyDibed && {
                   disconnect: {
                     id: breadId,

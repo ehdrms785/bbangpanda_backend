@@ -22,31 +22,30 @@ model User {
 
   // 외부 테이블 참조
   // 사장님 관련
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
   boughtBreads Bread[]
-  myCarts      Cart[]
-  ownBakery    Bakery?  @relation("ownBakery")
-  dibsBakery   Bakery[] @relation("Users_dibsBakery")
-  dibsBread    Bread[]  @relation("Users_dibsBread")
+  ownBakery    Bakery?     @relation("ownBakery")
+  dibsBakeries Bakery[]    @relation("Users_dibsBakery")
+  dibsBreads   Bread[]     @relation("Users_dibsBread")
+  cartBreads   CartBread[]
 }
 
 model Bread {
-  id                Int      @id @default(autoincrement())
+  id                Int         @id @default(autoincrement())
   name              String
   price             Int
   description       String?
   detailDescription String?
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
   // 시그니처 메뉴인지
-  isSigniture       Boolean  @default(false)
-  bakery            Bakery?  @relation("bakeryToBread", fields: [bakeryId], references: [id])
+  isSigniture       Boolean     @default(false)
+  bakery            Bakery?     @relation("bakeryToBread", fields: [bakeryId], references: [id])
   bakeryId          Int?
   boughtUsers       User[]
-  carts             Cart[]
-  dibedUsers        User[]   @relation("Users_dibsBread")
-
+  dibedUsers        User[]      @relation("Users_dibsBread")
+  cartBreads        CartBread[]
 }
 
 model Bakery {
@@ -60,17 +59,16 @@ model Bakery {
   owner             User?    @relation("ownBakery", fields: [ownerId], references: [id])
   ownerId           Int?
   breads            Bread[]  @relation("bakeryToBread")
-  carts             Cart[]
   dibedUsers        User[]   @relation("Users_dibsBakery")
 }
 
-model Cart {
+model CartBread {
   id        Int      @id @default(autoincrement())
-  userId    Int?
-  bakeryId  Int?
+  bakeryId  Int
   user      User?    @relation(fields: [userId], references: [id])
-  bakery    Bakery?  @relation(fields: [bakeryId], references: [id])
-  breads    Bread[]
+  userId    Int?
+  bread     Bread?   @relation(fields: [breadId], references: [id])
+  breadId   Int?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

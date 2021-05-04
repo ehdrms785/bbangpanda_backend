@@ -52,7 +52,7 @@ const ToggleDibsBakeryMutation: Resolvers = {
               id: loggedInUser?.id,
             },
             data: {
-              dibsBakery: {
+              dibsBakeries: {
                 ...(userAlreadyDibed && {
                   disconnect: {
                     id: bakeryId,
