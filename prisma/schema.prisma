@@ -46,6 +46,7 @@ model Bread {
   boughtUsers       User[]
   dibedUsers        User[]      @relation("Users_dibsBread")
   cartBreads        CartBread[]
+  orderLists        OrderList[]
 }
 
 model Bakery {
@@ -64,6 +65,7 @@ model Bakery {
 
 model CartBread {
   id        Int      @id @default(autoincrement())
+  quantity  Int      @default(1)
   bakeryId  Int
   user      User?    @relation(fields: [userId], references: [id])
   userId    Int?
@@ -73,6 +75,13 @@ model CartBread {
   updatedAt DateTime @updatedAt
 }
 
-// 나중에 Cart에 상품 추가할 때 CreateOrUpdate 해서
-// 해당 bakeryId값 가진 Cart가 없으면 Cart 새로 만들고
-// 있으면 해당 Cart에 Bread 추가 ! 굿
+model OrderList {
+  id          Int      @id @default(autoincrement())
+  orderNumber String
+  payAmount   Int
+  shippingFee Int
+  orderStatus String   @default("주문접수")
+  breads      Bread[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}

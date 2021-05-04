@@ -22,6 +22,7 @@ const DeleteCartBreadMutation: Resolvers = {
         try {
           await client.cartBread.deleteMany({
             where: {
+              userId: loggedInUser?.id,
               OR: cartBreadIdList.map((cartBreadId) => ({
                 id: cartBreadId,
               })),
