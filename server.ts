@@ -46,32 +46,7 @@ const app = express();
 app.use(logger("tiny"));
 app.use(express.json());
 app.use(urlencoded({ extended: true }));
-
-// app.use(bodyParser.urlencoded({ extended: true }));
-// app.use(bodyParser.json());
 apollo.applyMiddleware({ app });
-// app.get("/callbacks/kakao/sign_in", async (req, res) => {
-//   const redirect = `webauthcallback://success?${new URLSearchParams(
-//     req.query as any
-//   ).toString()}`;
-//   console.log(`Redirecting to ${redirect}`);
-//   res.redirect(307, redirect);
-// });
-// app.post("/callbacks/kakao/token", async (req, res) => {
-//   // if(req.statusCode )
-//   // console.log(req);
-//   console.log("토큰페이지");
-//   // console.log(req.body);
-//   // kakao_auth.createFirebaseToken(req.body["accessToken"], (result: any) => {
-//   // //   // console.log(result);
-//   //   res.send(result);
-//   // });
-// });
-// app.post("/callbacks/bbangnarae/sign_in", async (req, res) => {
-//   console.log("신호받았다");
-// });
-
-// app.post("/callbacks/kakao/unconnect", (req, res) => {});
 
 const httpServer = http.createServer(app);
 apollo.installSubscriptionHandlers(httpServer);

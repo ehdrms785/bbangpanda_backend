@@ -1,4 +1,8 @@
-import { makeErrorMessage } from "../../shared/shared.utils";
+import {
+  codeSpeedTestEnd,
+  codeSpeedTestStart,
+  makeErrorMessage,
+} from "../../shared/shared.utils";
 import { Resolvers } from "../../types";
 import { protectResolver } from "../../users/users.utils";
 
@@ -16,27 +20,32 @@ const RegistSignitureBread: Resolvers = {
             error: makeErrorMessage("X00080", "제공된 리스트가 없습니다"),
           };
         }
+
         try {
           await client.bread.updateMany({
             where: {
-              ownerId: loggedInUser?.id,
+              bakery: {
+                ownerId: loggedInUser?.id,
+              },
               isSigniture: true,
             },
             data: {
               isSigniture: false,
             },
           });
-          for (var breadId of breadList) {
-            await client.bread.updateMany({
-              where: {
+          await client.bread.updateMany({
+            where: {
+              OR: breadList.map((breadId) => ({
                 id: breadId,
+              })),
+              bakery: {
                 ownerId: loggedInUser?.id,
               },
-              data: {
-                isSigniture: true,
-              },
-            });
-          }
+            },
+            data: {
+              isSigniture: true,
+            },
+          });
           return {
             ok: true,
           };

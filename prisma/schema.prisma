@@ -24,11 +24,11 @@ model User {
   // 사장님 관련
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
-  /// @onDelete(CASCADE)
-  ownBreads    Bread[]  @relation("ownBreads")
   boughtBreads Bread[]
   myCarts      Cart[]
   ownBakery    Bakery?  @relation("ownBakery")
+  dibsBakery   Bakery[] @relation("Users_dibsBakery")
+  dibsBread    Bread[]  @relation("Users_dibsBread")
 }
 
 model Bread {
@@ -43,10 +43,10 @@ model Bread {
   isSigniture       Boolean  @default(false)
   bakery            Bakery?  @relation("bakeryToBread", fields: [bakeryId], references: [id])
   bakeryId          Int?
-  owner             User?    @relation("ownBreads", fields: [ownerId], references: [id])
-  ownerId           Int?
   boughtUsers       User[]
   carts             Cart[]
+  dibedUsers        User[]   @relation("Users_dibsBread")
+
 }
 
 model Bakery {
@@ -61,17 +61,18 @@ model Bakery {
   ownerId           Int?
   breads            Bread[]  @relation("bakeryToBread")
   carts             Cart[]
+  dibedUsers        User[]   @relation("Users_dibsBakery")
 }
 
 model Cart {
   id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  userId    Int
-  bakeryId  Int
+  userId    Int?
+  bakeryId  Int?
   user      User?    @relation(fields: [userId], references: [id])
   bakery    Bakery?  @relation(fields: [bakeryId], references: [id])
   breads    Bread[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 // 나중에 Cart에 상품 추가할 때 CreateOrUpdate 해서

@@ -61,11 +61,6 @@ const CreateBreadMutation: Resolvers = {
         try {
           await client.bread.create({
             data: {
-              owner: {
-                connect: {
-                  id: loggedInUser?.id,
-                },
-              },
               name,
               price,
               bakery: {
