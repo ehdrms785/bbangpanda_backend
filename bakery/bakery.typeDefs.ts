@@ -10,7 +10,14 @@ export default gql`
     breads(cursorBreadId: Int): [Bread]
     signitureBreads: [Bread]
     isMine: Boolean!
+    bakeryFeatures: [BakeryFeatures]
     createdAt: String!
     updatedAt: String!
+  }
+
+  type BakeryFeatures {
+    id: String!
+    filter: String!
+    bakeries: [Bakery]
   }
 `;

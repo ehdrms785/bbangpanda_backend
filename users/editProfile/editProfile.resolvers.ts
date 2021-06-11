@@ -19,6 +19,8 @@ const EditProfileMutation: Resolvers = {
         },
         { client, loggedInUser }
       ) => {
+        console.log("Edit Profile ㄷ들어옴");
+        console.log(username);
         if (!username && !avatar && !address && !phonenumber) {
           return {
             ok: false,

@@ -16,6 +16,7 @@ export default gql`
       address: String
       phonenumber: String!
       password: String!
+      uid: String!
     ): CreateUserMutationResult!
   }
 `;

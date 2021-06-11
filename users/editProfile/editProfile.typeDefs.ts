@@ -7,6 +7,6 @@ export default gql`
       avatar: String
       address: String
       phonenumber: String
-    ): SecureMutationResponse!
+    ): MutationResponse!
   }
 `;

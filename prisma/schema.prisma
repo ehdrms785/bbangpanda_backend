@@ -29,38 +29,46 @@ model User {
   dibsBakeries Bakery[]    @relation("Users_dibsBakery")
   dibsBreads   Bread[]     @relation("Users_dibsBread")
   cartBreads   CartBread[]
+  orderList    OrderList[]
 }
 
 model Bread {
-  id                Int         @id @default(autoincrement())
-  name              String
-  price             Int
-  description       String?
-  detailDescription String?
-  createdAt         DateTime    @default(now())
-  updatedAt         DateTime    @updatedAt
+  id                   Int                 @id @default(autoincrement())
+  name                 String
+  price                Int
+  discount             Int                 @default(0)
+  description          String?
+  detailDescription    String?
+  createdAt            DateTime            @default(now())
+  updatedAt            DateTime            @updatedAt
   // 시그니처 메뉴인지
-  isSigniture       Boolean     @default(false)
-  bakery            Bakery?     @relation("bakeryToBread", fields: [bakeryId], references: [id])
-  bakeryId          Int?
-  boughtUsers       User[]
-  dibedUsers        User[]      @relation("Users_dibsBread")
-  cartBreads        CartBread[]
-  orderLists        OrderList[]
+  isSigniture          Boolean             @default(false)
+  bakery               Bakery?             @relation("bakeryToBread", fields: [bakeryId], references: [id])
+  bakeryId             Int?
+  boughtUsers          User[]
+  dibedUsers           User[]              @relation("Users_dibsBread")
+  cartBreads           CartBread[]
+  orders               Order[]
+  breadFeatures        BreadFeatures[]
+  breadLargeCategory   BreadLargeCategory? @relation(fields: [breadLargeCategoryId], references: [id])
+  breadLargeCategoryId String?
+  breadSmallCategory   BreadSmallCategory? @relation(fields: [breadSmallCategoryId], references: [id])
+  breadSmallCategoryId String?
 }
 
 model Bakery {
-  id                Int      @id @default(autoincrement())
-  name              String   @unique
+  id                Int             @id @default(autoincrement())
+  name              String          @unique
   address           String?
   description       String?
   detailDescription String?
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
-  owner             User?    @relation("ownBakery", fields: [ownerId], references: [id])
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+  owner             User?           @relation("ownBakery", fields: [ownerId], references: [id])
   ownerId           Int?
-  breads            Bread[]  @relation("bakeryToBread")
-  dibedUsers        User[]   @relation("Users_dibsBakery")
+  breads            Bread[]         @relation("bakeryToBread")
+  dibedUsers        User[]          @relation("Users_dibsBakery")
+  bakeryFeatures    BakeryFeature[]
 }
 
 model CartBread {
@@ -75,13 +83,56 @@ model CartBread {
   updatedAt DateTime @updatedAt
 }
 
+model Order {
+  orderNumber    Int        @id
+  payAmount      Int
+  discountAmount Int        @default(0)
+  shippingFee    Int
+  orderStatus    String     @default("주문접수")
+  breads         Bread[]
+  createdAt      DateTime   @default(now())
+  OrderList      OrderList? @relation(fields: [orderListId], references: [id])
+  orderListId    Int?
+  // 결제수단
+  // pg관련 컬럼 추가 해야함
+  // 결제 은행 정보
+  // 결제 시간
+  // 승인 시간
+  // 승인 여부
+  // 요청사항
+  //
+}
+
 model OrderList {
-  id          Int      @id @default(autoincrement())
-  orderNumber String
-  payAmount   Int
-  shippingFee Int
-  orderStatus String   @default("주문접수")
-  breads      Bread[]
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id        Int     @id @default(autoincrement())
+  user      User?   @relation(fields: [userId], references: [id])
+  userId    Int?
+  orderList Order[]
+}
+
+model BakeryFeature {
+  id       String   @id
+  filter   String
+  bakeries Bakery[]
+}
+
+model BreadFeatures {
+  id     String  @id
+  filter String
+  breads Bread[]
+}
+
+model BreadLargeCategory {
+  id                 String               @id
+  category           String
+  breads             Bread[]
+  breadSmallCategory BreadSmallCategory[]
+}
+
+model BreadSmallCategory {
+  id              String             @id
+  largeCategory   BreadLargeCategory @relation(fields: [largeCategoryId], references: [id])
+  largeCategoryId String
+  category        String
+  breads          Bread[]
 }

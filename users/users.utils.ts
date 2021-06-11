@@ -11,7 +11,12 @@ import ms from "ms";
 export const getUser = async (accessToken: string | undefined) => {
   try {
     console.log("getUser 들어왔다");
-    if (!accessToken || !accessToken.startsWith("Bearer ")) {
+    console.log(accessToken);
+    if (
+      accessToken == null ||
+      accessToken == "" ||
+      !accessToken.startsWith("Bearer ")
+    ) {
       return null;
     }
     accessToken = accessToken.substr(7);
@@ -28,6 +33,7 @@ export const getUser = async (accessToken: string | undefined) => {
       console.log("유저 있음");
       return user;
     } else {
+      console.log("유저 없음");
       return null;
     }
   } catch (err) {
@@ -43,29 +49,27 @@ export const getUser = async (accessToken: string | undefined) => {
   }
 };
 
-export const protectResolver = (ourResolver: Resolver): Resolver => async (
-  root,
-  args,
-  context,
-  info
-) => {
-  try {
-    if (!context.loggedInUser) {
-      let isQuery = info.operation.operation === "query";
-      if (isQuery) {
-        return null;
-      } else {
-        return {
-          ok: false,
-          error: "You need to login",
-        };
+export const protectResolver =
+  (ourResolver: Resolver): Resolver =>
+  async (root, args, context, info) => {
+    try {
+      console.log("여기는 오나?");
+      if (!context.loggedInUser) {
+        let isQuery = info.operation.operation === "query";
+        if (isQuery) {
+          return null;
+        } else {
+          return {
+            ok: false,
+            error: "You need to login",
+          };
+        }
       }
+    } catch (err) {
+      console.log(err);
     }
-  } catch (err) {
-    console.log(err);
-  }
-  return ourResolver(root, args, context, info);
-};
+    return ourResolver(root, args, context, info);
+  };
 
 export const comparePassword = async (
   password: string,

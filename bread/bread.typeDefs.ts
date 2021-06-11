@@ -7,8 +7,15 @@ export default gql`
     price: Int!
     description: String
     detailDescription: String
+    isSigniture: Boolean!
     isMine: Boolean!
     createdAt: String!
     updatedAt: String!
+  }
+
+  type BreadFeatures {
+    id: String!
+    filter: String!
+    breads: [Bread]
   }
 `;

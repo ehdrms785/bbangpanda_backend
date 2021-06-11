@@ -11,7 +11,7 @@ const RegistSignitureBread: Resolvers = {
     registSignitureBread: protectResolver(
       async (
         _,
-        { breadList }: { breadList: Array<number> },
+        { breadList }: { breadList: number[] },
         { client, loggedInUser }
       ) => {
         if (!breadList || breadList.length === 0) {

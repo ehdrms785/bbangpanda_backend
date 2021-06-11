@@ -9,4 +9,12 @@ export default gql`
     ok: Boolean!
     error: String
   }
+  type SendSmsMutationResponse {
+    ok: Boolean!
+    error: String
+    code: String
+  }
+  type Mutation {
+    sendSms(phonenumber: String!): SendSmsMutationResponse!
+  }
 `;

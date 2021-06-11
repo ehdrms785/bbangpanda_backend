@@ -11,9 +11,7 @@ export default gql`
     isMe: Boolean!
     createdAt: String!
     updatedAt: String!
-  }
 
-  type Query {
-    dummy: String!
+    orderListCount: Int
   }
 `;

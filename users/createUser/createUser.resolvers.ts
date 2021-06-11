@@ -12,6 +12,39 @@ import {
   userRefTokenKeyUpdate,
 } from "../users.utils";
 import { makeErrorMessage } from "../../shared/shared.utils";
+import client from "../../client";
+
+const userExsitWith = async ({
+  username,
+  email,
+  phonenumber,
+}: {
+  username?: string;
+  email?: string;
+  phonenumber?: string;
+}): Promise<Boolean> => {
+  const userExist = await client.user.findUnique({
+    where: {
+      ...(username && { username }),
+      ...(email && { email }),
+      ...(phonenumber && { phonenumber }),
+    },
+    select: {
+      id: true,
+    },
+  });
+  return userExist !== null;
+};
+
+const firebaseUserDelete = async (uid: string) => {
+  if (uid) {
+    try {
+      await admin.auth().deleteUser(uid);
+    } catch (e) {
+      console.log("파이어베이스 아이디 삭제 실패");
+    }
+  }
+};
 const CreateUserMutation: Resolvers = {
   Mutation: {
     createUser: async (
@@ -22,17 +55,18 @@ const CreateUserMutation: Resolvers = {
         address,
         phonenumber,
         password,
+        uid,
       }: {
         username: string;
         email: string;
         address?: string;
         phonenumber: string;
         password: string;
+        uid: string;
       },
       { client }
     ) => {
       try {
-        console.log("회원가입 요청");
         if (!username || !email || !phonenumber || !password) {
           return {
             ok: false,
@@ -40,30 +74,28 @@ const CreateUserMutation: Resolvers = {
           };
         }
         email = email.toLowerCase();
-        const userExist = await client.user.findFirst({
-          where: {
-            OR: [
-              {
-                username,
-              },
-              {
-                phonenumber,
-              },
-              {
-                email,
-              },
-            ],
-          },
-        });
-        if (userExist) {
+        if (await userExsitWith({ email })) {
+          return {
+            ok: false,
+            error: makeErrorMessage("X00021-1", "중복된 이메일이 존재합니다."),
+          };
+        }
+        if (await userExsitWith({ username })) {
+          return {
+            ok: false,
+            error: makeErrorMessage("X00021-2", "중복된 이름이 존재합니다."),
+          };
+        }
+        if (await userExsitWith({ phonenumber })) {
           return {
             ok: false,
             error: makeErrorMessage(
-              "X00021",
-              "입력하신 정보를 가진 유저가 이미 존재합니다."
+              "X00021-3",
+              "중복된 휴대폰번호가 존재합니다."
             ),
           };
         }
+        firebaseUserDelete(uid);
         const hashedPassword = await hashingPassword(password);
 
         const createdUser = await client.user.create({
@@ -103,7 +135,7 @@ const CreateUserMutation: Resolvers = {
           });
           return {
             ok: false,
-            error: "파이어베이스 회원가입실패",
+            error: makeErrorMessage("X00022", "파이어베이스 회원가입실패"),
           };
         }
         const customToken = await getCustomToken(createdUser.id);
@@ -133,7 +165,7 @@ const CreateUserMutation: Resolvers = {
         return {
           ok: false,
           error: makeErrorMessage(
-            "X00022",
+            "X00023",
             "같은 오류가 반복된다면 관리자에게 문의 해 주세요."
           ),
         };
