@@ -9,19 +9,21 @@ const CreateBreadMutation: Resolvers = {
         _,
         {
           name,
-          price,
+          costPrice,
+          discount,
           description,
           detailDescription,
         }: {
           name: string;
-          price: number;
+          costPrice: number;
+          discount: number;
           description?: string;
           detailDescription?: string;
         },
         { client, loggedInUser },
         __
       ) => {
-        if (!name || !price) {
+        if (!name || !costPrice) {
           return {
             ok: false,
             error: makeErrorMessage(
@@ -62,7 +64,11 @@ const CreateBreadMutation: Resolvers = {
           await client.bread.create({
             data: {
               name,
-              price,
+              costPrice,
+              ...(discount && { discount }),
+              price:
+                Math.floor((costPrice - costPrice * (discount / 100)) / 10) *
+                10,
               bakery: {
                 connect: {
                   id: myBakery?.id,

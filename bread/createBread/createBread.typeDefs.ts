@@ -4,7 +4,8 @@ export default gql`
   type Mutation {
     createBread(
       name: String!
-      price: Int!
+      costPrice: Int!
+      discount: Int
       description: String
       detailDescription: String
     ): MutationResponse!

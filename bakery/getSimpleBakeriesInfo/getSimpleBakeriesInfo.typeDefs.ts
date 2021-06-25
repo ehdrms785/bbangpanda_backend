@@ -2,12 +2,10 @@ import { gql } from "apollo-server-core";
 
 export default gql`
   type Query {
-    getFilteredBreadList(
-      largeCategoryId: String
-      smallCategoryId: String
+    getSimpleBakeriesInfo(
       sortFilterId: String!
       filterIdList: [String]
       cursorId: Int
-    ): [Bread]
+    ): [Bakery]
   }
 `;

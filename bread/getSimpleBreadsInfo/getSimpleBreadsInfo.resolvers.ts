@@ -13,9 +13,9 @@ BreadOptionFilter
   3: 무가당
 */
 
-const GetFilteredBreadListQuery: Resolvers = {
+const GetSimpleBreadsInfoQuery: Resolvers = {
   Query: {
-    getFilteredBreadList: async (
+    getSimpleBreadsInfo: async (
       _,
       {
         largeCategoryId = "0",
@@ -36,8 +36,12 @@ const GetFilteredBreadListQuery: Resolvers = {
       //   return null;
       // }
       try {
-        console.log("여기는 GetFilteredBreadList");
+        console.log("여기는 getSimpleBreadsInfo");
         console.log(`cursorId: ${cursorId}`);
+        console.log(`sortFilterId: ${sortFilterId}`);
+        console.log(`largeCategoryId: ${largeCategoryId}`);
+        console.log(`smallCategoryId: ${smallCategoryId}`);
+
         console.log(filterIdList);
 
         const result = await client.bread.findMany({
@@ -60,7 +64,10 @@ const GetFilteredBreadListQuery: Resolvers = {
             id: true,
             name: true,
             price: true,
+            discount: true,
             description: true,
+            isSigniture: true,
+
             breadFeatures: {
               select: {
                 id: true,
@@ -88,4 +95,4 @@ const GetFilteredBreadListQuery: Resolvers = {
     },
   },
 };
-export default GetFilteredBreadListQuery;
+export default GetSimpleBreadsInfoQuery;

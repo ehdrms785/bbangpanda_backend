@@ -4,10 +4,12 @@
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+
 }
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["orderByRelation", "selectRelationCount"]
 }
 
 model User {
@@ -33,18 +35,21 @@ model User {
 }
 
 model Bread {
-  id                   Int                 @id @default(autoincrement())
-  name                 String
-  price                Int
-  discount             Int                 @default(0)
-  description          String?
-  detailDescription    String?
-  createdAt            DateTime            @default(now())
-  updatedAt            DateTime            @updatedAt
+  id                Int      @id @default(autoincrement())
+  name              String
+  costPrice         Int      @default(0)
+  price             Int
+  discount          Int      @default(0)
+  description       String?
+  detailDescription String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+
   // 시그니처 메뉴인지
   isSigniture          Boolean             @default(false)
-  bakery               Bakery?             @relation("bakeryToBread", fields: [bakeryId], references: [id])
-  bakeryId             Int?
+  bakery               Bakery              @relation("bakeryToBread", fields: [bakeryId], references: [id])
+  bakeryId             Int
   boughtUsers          User[]
   dibedUsers           User[]              @relation("Users_dibsBread")
   cartBreads           CartBread[]
