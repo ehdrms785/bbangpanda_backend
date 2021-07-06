@@ -11,12 +11,12 @@ export default gql`
     detailDescription: String
     isSigniture: Boolean!
     isMine: Boolean!
-    breadFeatures: [BreadFeatures]
+    breadFeatures: [BreadFeature]
     createdAt: String!
     updatedAt: String!
   }
 
-  type BreadFeatures {
+  type BreadFeature {
     id: String!
     filter: String!
     breads: [Bread]

@@ -2,6 +2,7 @@ import { Resolvers } from "../../types";
 import { makeErrorMessage } from "../../shared/shared.utils";
 import { getBreadsFromBakery } from "../bread.utils";
 import client from "../../client";
+import { getSimpleBreadsInfoModule } from "../breadSharedFunctions";
 
 const SearchBreadsQuery: Resolvers = {
   Query: {
@@ -9,27 +10,32 @@ const SearchBreadsQuery: Resolvers = {
       _,
       {
         searchTerm,
+        sortFilterId,
+        filterIdList = [],
         cursorBreadId,
       }: {
+        sortFilterId: string;
+        filterIdList: string[];
         searchTerm: string;
-        cursorBreadId?: number;
+        cursorBreadId: number;
       }
     ) => {
       if (searchTerm == "") return null;
-      return client.bread.findMany({
-        where: {
-          name: {
-            contains: searchTerm,
-          },
-        },
-        select: {
-          id: true,
-          name: true,
-          discount: true,
-          price: true,
-          description: true,
-        },
-      });
+      try {
+        console.log("여기는 SearchBreads");
+
+        const result = await getSimpleBreadsInfoModule({
+          searchTerm,
+          sortFilterId,
+          filterIdList,
+          cursorBreadId,
+        });
+        console.log(result);
+        return result;
+      } catch (err) {
+        console.log(err);
+        return null;
+      }
     },
   },
 };

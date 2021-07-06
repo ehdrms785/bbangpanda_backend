@@ -5,7 +5,7 @@ export default gql`
     getSimpleBakeriesInfo(
       sortFilterId: String!
       filterIdList: [String]
-      cursorId: Int
+      cursorBakeryId: Int
     ): [Bakery]
   }
 `;

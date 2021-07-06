@@ -8,12 +8,12 @@ import client from "./client";
 import { getUser } from "./users/users.utils";
 
 import "./firebase/firebase_admin";
-
 const PORT = process.env.PORT;
 
 const apollo = new ApolloServer({
   typeDefs,
   resolvers,
+
   context: async ({ req, connection }) => {
     let authorization = "";
     if (req) {

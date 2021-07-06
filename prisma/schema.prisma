@@ -9,7 +9,7 @@ datasource db {
 
 generator client {
   provider        = "prisma-client-js"
-  previewFeatures = ["orderByRelation", "selectRelationCount"]
+  previewFeatures = ["orderByRelation"]
 }
 
 model User {
@@ -23,15 +23,16 @@ model User {
   refToken    String?
 
   // 외부 테이블 참조
-  // 사장님 관련
-  createdAt    DateTime    @default(now())
-  updatedAt    DateTime    @updatedAt
-  boughtBreads Bread[]
-  ownBakery    Bakery?     @relation("ownBakery")
-  dibsBakeries Bakery[]    @relation("Users_dibsBakery")
-  dibsBreads   Bread[]     @relation("Users_dibsBread")
-  cartBreads   CartBread[]
-  orderList    OrderList[]
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+  boughtBreads     Bread[]
+  ownBakery        Bakery?       @relation("ownBakery")
+  dibsBakeries     Bakery[]      @relation("Users_dibsBakery")
+  dibsBreads       Bread[]       @relation("Users_dibsBread")
+  cartBreads       CartBread[]
+  orderList        OrderList[]
+  dibsMarketOrders MarketOrder[] @relation("Users_dibsMarketOrder")
+
 }
 
 model Bread {
@@ -48,8 +49,8 @@ model Bread {
 
   // 시그니처 메뉴인지
   isSigniture          Boolean             @default(false)
-  bakery               Bakery              @relation("bakeryToBread", fields: [bakeryId], references: [id])
-  bakeryId             Int
+  bakery               Bakery?             @relation("bakeryToBread", fields: [bakeryId], references: [id])
+  bakeryId             Int?
   boughtUsers          User[]
   dibedUsers           User[]              @relation("Users_dibsBread")
   cartBreads           CartBread[]
@@ -59,6 +60,9 @@ model Bread {
   breadLargeCategoryId String?
   breadSmallCategory   BreadSmallCategory? @relation(fields: [breadSmallCategoryId], references: [id])
   breadSmallCategoryId String?
+
+  marketOrders               MarketOrder[]
+  marketOrderSignitureBreads MarketOrder[] @relation("MarketOrderSignitureBreads")
 }
 
 model Bakery {
@@ -74,12 +78,34 @@ model Bakery {
   breads            Bread[]         @relation("bakeryToBread")
   dibedUsers        User[]          @relation("Users_dibsBakery")
   bakeryFeatures    BakeryFeature[]
+  isMarket          Boolean         @default(false)
+  marketOrders      MarketOrder[]
+}
+
+model MarketOrder {
+  id              Int     @id @default(autoincrement())
+  orderName       String
+  thumbnail       String?
+  signitureBreads Bread[] @relation("MarketOrderSignitureBreads")
+  lineUpBreads    Bread[]
+  bakery          Bakery? @relation(fields: [bakeryId], references: [id])
+  bakeryId        Int?
+  dibedUsers      User[]  @relation("Users_dibsMarketOrder")
+
+  orderStartDate DateTime
+  orderEndDate   DateTime
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+
+  marketOrderFeatures MarketOrderFeature[]
 }
 
 model CartBread {
-  id        Int      @id @default(autoincrement())
-  quantity  Int      @default(1)
-  bakeryId  Int
+  id       Int  @id @default(autoincrement())
+  quantity Int  @default(1)
+  bakeryId Int?
+
   user      User?    @relation(fields: [userId], references: [id])
   userId    Int?
   bread     Bread?   @relation(fields: [breadId], references: [id])
@@ -94,6 +120,7 @@ model Order {
   discountAmount Int        @default(0)
   shippingFee    Int
   orderStatus    String     @default("주문접수")
+  bakeryId       Int?
   breads         Bread[]
   createdAt      DateTime   @default(now())
   OrderList      OrderList? @relation(fields: [orderListId], references: [id])
@@ -115,10 +142,17 @@ model OrderList {
   orderList Order[]
 }
 
+model MarketOrderFeature {
+  id           String        @id
+  filter       String
+  marketOrders MarketOrder[]
+}
+
 model BakeryFeature {
   id       String   @id
   filter   String
   bakeries Bakery[]
+
 }
 
 model BreadFeatures {
@@ -140,4 +174,15 @@ model BreadSmallCategory {
   largeCategoryId String
   category        String
   breads          Bread[]
+}
+
+model Post {
+  id          Int      @id @default(autoincrement())
+  title       String
+  LikedPeople Person[]
+}
+
+model Person {
+  id        Int    @id @default(autoincrement())
+  likePosts Post[]
 }

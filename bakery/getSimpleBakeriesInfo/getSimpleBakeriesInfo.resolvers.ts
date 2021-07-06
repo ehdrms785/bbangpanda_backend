@@ -25,11 +25,11 @@ const GetSimpleBakeriesInfoQuery: Resolvers = {
       {
         sortFilterId,
         filterIdList = [],
-        cursorId,
+        cursorBakeryId,
       }: {
         sortFilterId: string;
         filterIdList: String[];
-        cursorId: number;
+        cursorBakeryId: number;
       },
       { client }
     ) => {
@@ -38,7 +38,7 @@ const GetSimpleBakeriesInfoQuery: Resolvers = {
       // }
       try {
         console.log("여기는 GetFilteredBreadList");
-        console.log(`cursorId: ${cursorId}`);
+        console.log(`cursorBakeryId: ${cursorBakeryId}`);
         console.log(`sortFilterId: ${sortFilterId}`);
         console.log(filterIdList);
 
@@ -63,13 +63,15 @@ const GetSimpleBakeriesInfoQuery: Resolvers = {
               },
             },
           },
-          ...(cursorId && { cursor: { id: cursorId } }),
-          skip: cursorId ? 1 : 0,
-          take: 2,
+          ...(cursorBakeryId && { cursor: { id: cursorBakeryId } }),
+          skip: cursorBakeryId ? 1 : 0,
+          take: 4,
           orderBy: {
             //1최신 2 인기 3 리뷰순
             ...(sortFilterId == "1" && { createdAt: "desc" }),
-            ...(sortFilterId == "2" && { dibedUsers: { _count: "desc" } }),
+            ...(sortFilterId == "2" && {
+              dibedUsers: { _count: "desc" },
+            }),
             // ...(sortFilterId == "3" && { price: "asc" }),
           },
         });

@@ -1,33 +1,34 @@
 import { Resolvers } from "../../types";
 import { makeErrorMessage } from "../../shared/shared.utils";
 import client from "../../client";
-import { getSimpleBakeriesInfoModule } from "../bakerySharedFunctions";
+import { getSimpleBakeriesInfoModule } from "../../bakery/bakerySharedFunctions";
+import { getSimpleMarketOrdersInfoModule } from "../marketOrderSharedFunctions";
 
-const SearchBakeriesQuery: Resolvers = {
+const SearchMarketOrders: Resolvers = {
   Query: {
-    searchBakeries: async (
+    searchMarketOrders: async (
       _,
       {
         searchTerm,
         sortFilterId,
         filterIdList,
-        cursorBakeryId,
+        cursorMarketOrderId,
       }: {
         searchTerm: string;
         sortFilterId: string;
         filterIdList: string[];
-        cursorBakeryId?: number;
+        cursorMarketOrderId?: number;
       }
     ) => {
       if (searchTerm == "") return null;
-      return getSimpleBakeriesInfoModule({
+      return getSimpleMarketOrdersInfoModule({
         searchTerm,
         filterIdList,
         sortFilterId,
-        cursorBakeryId,
+        cursorMarketOrderId,
       });
     },
   },
 };
 
-export default SearchBakeriesQuery;
+export default SearchMarketOrders;

@@ -2,11 +2,11 @@ import { gql } from "apollo-server-core";
 
 export default gql`
   type Query {
-    searchBakeries(
+    searchMarketOrders(
       searchTerm: String
       sortFilterId: String
       filterIdList: [String!]!
-      cursorBakeryId: Int
-    ): [Bakery]
+      cursorMarketOrderId: Int
+    ): [MarketOrder]
   }
 `;

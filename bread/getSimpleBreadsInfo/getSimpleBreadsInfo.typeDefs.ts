@@ -7,7 +7,7 @@ export default gql`
       smallCategoryId: String
       sortFilterId: String!
       filterIdList: [String]
-      cursorId: Int
+      cursorBreadId: Int
     ): [Bread]
   }
 `;

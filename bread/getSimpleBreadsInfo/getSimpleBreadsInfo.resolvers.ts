@@ -1,5 +1,6 @@
 import { prisma } from "@prisma/client";
 import { Resolvers } from "../../types";
+import { getSimpleBreadsInfoModule } from "../breadSharedFunctions";
 /*
 BreadSortFilter
   1: 최신순
@@ -22,70 +23,32 @@ const GetSimpleBreadsInfoQuery: Resolvers = {
         smallCategoryId = "0",
         sortFilterId,
         filterIdList = [],
-        cursorId,
+        cursorBreadId,
       }: {
         largeCategoryId: string;
         smallCategoryId: string;
         sortFilterId: string;
-        filterIdList: String[];
-        cursorId: number;
+        filterIdList: string[];
+        cursorBreadId: number;
       },
       { client }
     ) => {
-      // if (filterIdList == null || filterIdList.length == 0) {
-      //   return null;
-      // }
       try {
         console.log("여기는 getSimpleBreadsInfo");
-        console.log(`cursorId: ${cursorId}`);
+        console.log(`cursorBreadId: ${cursorBreadId}`);
         console.log(`sortFilterId: ${sortFilterId}`);
         console.log(`largeCategoryId: ${largeCategoryId}`);
         console.log(`smallCategoryId: ${smallCategoryId}`);
 
         console.log(filterIdList);
 
-        const result = await client.bread.findMany({
-          where: {
-            AND: filterIdList.map((filterId) => ({
-              breadFeatures: {
-                some: {
-                  id: filterId,
-                },
-              },
-            })) as any,
-            ...(largeCategoryId != "0" && {
-              breadLargeCategoryId: largeCategoryId,
-            }),
-            ...(smallCategoryId != "0" && {
-              breadSmallCategoryId: smallCategoryId,
-            }),
-          },
-          select: {
-            id: true,
-            name: true,
-            price: true,
-            discount: true,
-            description: true,
-            isSigniture: true,
-
-            breadFeatures: {
-              select: {
-                id: true,
-                filter: true,
-              },
-            },
-          },
-          ...(cursorId && { cursor: { id: cursorId } }),
-          skip: cursorId ? 1 : 0,
-          take: 2,
-          orderBy: {
-            //1최신 2 인기 3 저가 4리뷰
-            ...(sortFilterId == "1" && { createdAt: "desc" }),
-            ...(sortFilterId == "2" && { dibedUsers: { _count: "desc" } }),
-            ...(sortFilterId == "3" && { price: "asc" }),
-          },
+        const result = await getSimpleBreadsInfoModule({
+          largeCategoryId,
+          smallCategoryId,
+          sortFilterId,
+          filterIdList,
+          cursorBreadId: cursorBreadId,
         });
-
         console.log(result);
         return result;
       } catch (err) {

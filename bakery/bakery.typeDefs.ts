@@ -10,12 +10,12 @@ export default gql`
     breads(cursorBreadId: Int): [Bread]
     signitureBreads: [Bread]
     isMine: Boolean!
-    bakeryFeatures: [BakeryFeatures]
+    bakeryFeatures: [BakeryFeature]
     createdAt: String!
     updatedAt: String!
   }
 
-  type BakeryFeatures {
+  type BakeryFeature {
     id: String!
     filter: String!
     bakeries: [Bakery]
