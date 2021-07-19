@@ -3,6 +3,7 @@ import { gql } from "apollo-server-core";
 export default gql`
   type Bread {
     id: Int!
+    thumbnail: String
     name: String!
     bakeryName: String
     price: Int!

@@ -34,6 +34,7 @@ export const getSimpleBreadsInfoModule = (args: getSimpleBreadsInfoArgs) => {
     },
     select: {
       id: true,
+      thumbnail: true,
       name: true,
       price: true,
       discount: true,

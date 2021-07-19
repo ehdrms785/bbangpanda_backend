@@ -37,6 +37,7 @@ model User {
 
 model Bread {
   id                Int      @id @default(autoincrement())
+  thumbnail         String?
   name              String
   costPrice         Int      @default(0)
   price             Int
@@ -80,6 +81,9 @@ model Bakery {
   bakeryFeatures    BakeryFeature[]
   isMarket          Boolean         @default(false)
   marketOrders      MarketOrder[]
+
+  breadLargeCategories BreadLargeCategory[]
+  breadSmallCateogries BreadSmallCategory[]
 }
 
 model MarketOrder {
@@ -166,6 +170,7 @@ model BreadLargeCategory {
   category           String
   breads             Bread[]
   breadSmallCategory BreadSmallCategory[]
+  bakeries           Bakery[]
 }
 
 model BreadSmallCategory {
@@ -174,6 +179,7 @@ model BreadSmallCategory {
   largeCategoryId String
   category        String
   breads          Bread[]
+  bakeries        Bakery[]
 }
 
 model Post {

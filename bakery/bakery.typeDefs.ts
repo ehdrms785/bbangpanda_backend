@@ -11,6 +11,8 @@ export default gql`
     signitureBreads: [Bread]
     isMine: Boolean!
     bakeryFeatures: [BakeryFeature]
+    breadLargeCategories: [BreadLargeCategory]
+    breadSmallCategories: [BreadSmallCategory]
     createdAt: String!
     updatedAt: String!
   }
@@ -20,4 +22,5 @@ export default gql`
     filter: String!
     bakeries: [Bakery]
   }
+
 `;

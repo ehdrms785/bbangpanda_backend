@@ -17,6 +17,26 @@ const BakeryResolvers: Resolvers = {
           name: true,
         },
       }),
+    breadLargeCategories: ({ id }, _, { client }) =>
+      client.breadLargeCategory.findMany({
+        where: {
+          bakeries: {
+            some: {
+              id,
+            },
+          },
+        },
+      }),
+    breadSmallCategories: ({ id }, _, { client }) =>
+      client.breadSmallCategory.findMany({
+        where: {
+          bakeries: {
+            some: {
+              id,
+            },
+          },
+        },
+      }),
   },
 };
 

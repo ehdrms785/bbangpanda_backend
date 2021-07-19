@@ -8,12 +8,16 @@ const CreateBreadMutation: Resolvers = {
       async (
         _,
         {
+          breadLargeCategoryId,
+          breadSmallCategoryId,
           name,
           costPrice,
           discount,
           description,
           detailDescription,
         }: {
+          breadLargeCategoryId: string;
+          breadSmallCategoryId: string;
           name: string;
           costPrice: number;
           discount: number;
@@ -41,6 +45,7 @@ const CreateBreadMutation: Resolvers = {
             id: true,
           },
         });
+
         const breadExisted = await client.bread.findFirst({
           where: {
             bakeryId: myBakery?.id,
@@ -76,8 +81,48 @@ const CreateBreadMutation: Resolvers = {
               },
               ...(description && { description }),
               ...(detailDescription && { detailDescription }),
+              breadLargeCategory: {
+                connect: {
+                  id: breadLargeCategoryId,
+                },
+              },
+              breadSmallCategory: {
+                connect: {
+                  id: breadSmallCategoryId,
+                },
+              },
             },
           });
+          await client.breadLargeCategory.update({
+            where: {
+              id: breadLargeCategoryId,
+            },
+            data: {
+              bakeries: {
+                connect: {
+                  id: myBakery?.id,
+                },
+              },
+            },
+          });
+          await client.breadSmallCategory.update({
+            where: {
+              id: breadSmallCategoryId,
+            },
+            data: {
+              bakeries: {
+                connect: {
+                  id: myBakery?.id,
+                },
+              },
+            },
+          });
+          // await client.bakery.findUnique({
+          //   where: {
+          //     id: myBakery?.id
+          //   },
+
+          // })
           return {
             ok: true,
           };

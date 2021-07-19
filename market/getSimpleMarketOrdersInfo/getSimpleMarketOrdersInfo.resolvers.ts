@@ -1,9 +1,5 @@
 import { Resolvers } from "../../types";
-export type Resolvers = {
-  [key: string]: {
-    [key: string]: Resolver;
-  };
-};
+
 const GetSimpleMarketOrdersInfoQuery: Resolvers = {
   Query: {
     getSimpleMarketOrdersInfo: async (
