@@ -3,6 +3,7 @@ import { gql } from "apollo-server-core";
 export default gql`
   type Bakery {
     id: Int!
+    thumbnail: String
     name: String!
     address: String
     description: String
@@ -10,6 +11,7 @@ export default gql`
     breads(cursorBreadId: Int): [Bread]
     signitureBreads: [Bread]
     isMine: Boolean!
+    isGotDibs: Boolean!
     bakeryFeatures: [BakeryFeature]
     breadLargeCategories: [BreadLargeCategory]
     breadSmallCategories: [BreadSmallCategory]

@@ -12,7 +12,7 @@ const SeeDibsBakeryQuery: Resolvers = {
       }
       return client.bakery.findMany({
         where: {
-          dibedUsers: {
+          gotDibsUsers: {
             some: {
               id: userId,
             },

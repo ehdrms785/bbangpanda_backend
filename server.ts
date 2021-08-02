@@ -23,7 +23,6 @@ const apollo = new ApolloServer({
     } else {
       authorization = connection?.context.authorization || "";
     }
-
     return {
       loggedInUser: await getUser(authorization),
       client,
@@ -41,6 +40,10 @@ const apollo = new ApolloServer({
     },
   },
 });
+
+
+
+
 
 const app = express();
 app.use(logger("tiny"));

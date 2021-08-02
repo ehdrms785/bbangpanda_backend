@@ -51,7 +51,7 @@ const GetSimpleMarketOrdersInfoQuery: Resolvers = {
           orderBy: {
             // 1최신 2인기 3마감임박순
             ...(sortFilterId == "1" && { createdAt: "desc" }),
-            ...(sortFilterId == "2" && { dibedUsers: { _count: "desc" } }),
+            ...(sortFilterId == "2" && { gotDibsUsers: { _count: "desc" } }),
             ...(sortFilterId == "3" && { orderEndDate: "asc" }),
           },
           ...(cursorMarketOrderId && { cursor: { id: cursorMarketOrderId } }),

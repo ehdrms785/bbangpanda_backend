@@ -44,7 +44,7 @@ export const getSimpleBakeriesInfoModule = async (
     orderBy: {
       //1최신 2 인기 3 리뷰
       ...(args.sortFilterId == "1" && { createdAt: "desc" }),
-      ...(args.sortFilterId == "2" && { dibedUsers: { _count: "desc" } }),
+      ...(args.sortFilterId == "2" && { gotDibsUsers: { _count: "desc" } }),
       // ...(sortFilterId == "3" && {  }),
     },
   });

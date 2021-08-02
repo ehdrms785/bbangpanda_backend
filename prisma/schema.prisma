@@ -23,16 +23,16 @@ model User {
   refToken    String?
 
   // 외부 테이블 참조
-  createdAt        DateTime      @default(now())
-  updatedAt        DateTime      @updatedAt
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
   boughtBreads     Bread[]
-  ownBakery        Bakery?       @relation("ownBakery")
-  dibsBakeries     Bakery[]      @relation("Users_dibsBakery")
-  dibsBreads       Bread[]       @relation("Users_dibsBread")
+  ownBakery        Bakery?          @relation("ownBakery")
+  dibsBakeries     Bakery[]         @relation("Users_dibsBakery")
+  dibsBreads       Bread[]          @relation("Users_dibsBread")
   cartBreads       CartBread[]
   orderList        OrderList[]
-  dibsMarketOrders MarketOrder[] @relation("Users_dibsMarketOrder")
-
+  dibsMarketOrders MarketOrder[]    @relation("Users_dibsMarketOrder")
+  dibsDrawerList   DibsDrawerList[]
 }
 
 model Bread {
@@ -53,7 +53,7 @@ model Bread {
   bakery               Bakery?             @relation("bakeryToBread", fields: [bakeryId], references: [id])
   bakeryId             Int?
   boughtUsers          User[]
-  dibedUsers           User[]              @relation("Users_dibsBread")
+  gotDibsUsers         User[]              @relation("Users_dibsBread")
   cartBreads           CartBread[]
   orders               Order[]
   breadFeatures        BreadFeatures[]
@@ -64,10 +64,12 @@ model Bread {
 
   marketOrders               MarketOrder[]
   marketOrderSignitureBreads MarketOrder[] @relation("MarketOrderSignitureBreads")
+  dibsDrawer                 DibsDrawer[]
 }
 
 model Bakery {
   id                Int             @id @default(autoincrement())
+  thumbnail         String?
   name              String          @unique
   address           String?
   description       String?
@@ -77,7 +79,7 @@ model Bakery {
   owner             User?           @relation("ownBakery", fields: [ownerId], references: [id])
   ownerId           Int?
   breads            Bread[]         @relation("bakeryToBread")
-  dibedUsers        User[]          @relation("Users_dibsBakery")
+  gotDibsUsers      User[]          @relation("Users_dibsBakery")
   bakeryFeatures    BakeryFeature[]
   isMarket          Boolean         @default(false)
   marketOrders      MarketOrder[]
@@ -94,7 +96,7 @@ model MarketOrder {
   lineUpBreads    Bread[]
   bakery          Bakery? @relation(fields: [bakeryId], references: [id])
   bakeryId        Int?
-  dibedUsers      User[]  @relation("Users_dibsMarketOrder")
+  gotDibsUsers    User[]  @relation("Users_dibsMarketOrder")
 
   orderStartDate DateTime
   orderEndDate   DateTime
@@ -191,4 +193,20 @@ model Post {
 model Person {
   id        Int    @id @default(autoincrement())
   likePosts Post[]
+}
+
+// 찜 목록
+model DibsDrawerList {
+  id          Int          @id @default(autoincrement())
+  user        User?        @relation(fields: [userId], references: [id])
+  userId      Int?
+  dibsDrawers DibsDrawer[]
+}
+
+model DibsDrawer {
+  id               Int             @id @default(autoincrement())
+  name             String
+  item             Bread[]
+  dibsDrawerList   DibsDrawerList? @relation(fields: [dibsDrawerListId], references: [id])
+  dibsDrawerListId Int?
 }

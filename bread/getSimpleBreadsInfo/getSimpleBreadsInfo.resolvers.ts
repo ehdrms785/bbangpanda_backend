@@ -19,12 +19,14 @@ const GetSimpleBreadsInfoQuery: Resolvers = {
     getSimpleBreadsInfo: async (
       _,
       {
+        bakeryId,
         largeCategoryId = "0",
         smallCategoryId = "0",
         sortFilterId,
         filterIdList = [],
         cursorBreadId,
       }: {
+        bakeryId: number | undefined;
         largeCategoryId: string;
         smallCategoryId: string;
         sortFilterId: string;
@@ -43,6 +45,7 @@ const GetSimpleBreadsInfoQuery: Resolvers = {
         console.log(filterIdList);
 
         const result = await getSimpleBreadsInfoModule({
+          bakeryId,
           largeCategoryId,
           smallCategoryId,
           sortFilterId,

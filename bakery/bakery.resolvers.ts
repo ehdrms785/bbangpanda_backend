@@ -1,4 +1,5 @@
 import { getBreadsFromBakery } from "../bread/bread.utils";
+import client from "../client";
 import { Resolvers } from "../types";
 
 const BakeryResolvers: Resolvers = {
@@ -6,6 +7,24 @@ const BakeryResolvers: Resolvers = {
     breads: ({ id }, { cursorBreadId }) =>
       getBreadsFromBakery(id, cursorBreadId),
     isMine: ({ ownerId }, _, { loggedInUser }) => ownerId === loggedInUser?.id,
+    isGotDibs: async ({id},_, {loggedInUser})=> { 
+      
+      const isGotDibs = await client.bakery.findFirst({
+      where: {
+        id,
+        gotDibsUsers: {
+          some: {
+            id: loggedInUser?.id
+          }
+        },
+
+      },
+      select: {
+        id: true
+      }
+    });
+    return Boolean(isGotDibs);
+  },
     signitureBreads: ({ id }, _, { client }) =>
       client.bread.findMany({
         where: {

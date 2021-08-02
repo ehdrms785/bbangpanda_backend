@@ -12,7 +12,7 @@ const SeeDibsBreadQuery: Resolvers = {
       }
       return client.bread.findMany({
         where: {
-          dibedUsers: {
+          gotDibsUsers: {
             some: {
               id: userId,
             },

@@ -33,7 +33,7 @@ const ToggleDibsBreadMutation: Resolvers = {
           const userAlreadyDibed = await client.bread.findFirst({
             where: {
               id: breadId,
-              dibedUsers: {
+              gotDibsUsers: {
                 some: {
                   id: loggedInUser?.id,
                 },

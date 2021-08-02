@@ -1,6 +1,7 @@
 import client from "../client";
 
 interface getSimpleBreadsInfoArgs {
+  bakeryId?: number | undefined;
   searchTerm?: string;
   largeCategoryId?: string;
   smallCategoryId?: string;
@@ -20,6 +21,7 @@ export const getSimpleBreadsInfoModule = (args: getSimpleBreadsInfoArgs) => {
           },
         },
       })) as any,
+      ...(args.bakeryId != null && {bakeryId: args.bakeryId}),
       ...(args.largeCategoryId != "0" && {
         breadLargeCategoryId: args.largeCategoryId,
       }),
@@ -54,7 +56,7 @@ export const getSimpleBreadsInfoModule = (args: getSimpleBreadsInfoArgs) => {
     orderBy: {
       //1최신 2 인기 3 저가 4리뷰
       ...(args.sortFilterId == "1" && { createdAt: "desc" }),
-      ...(args.sortFilterId == "2" && { dibedUsers: { _count: "desc" } }),
+      ...(args.sortFilterId == "2" && { gotDibsUsers: { _count: "desc" } }),
       ...(args.sortFilterId == "3" && { price: "asc" }),
     },
   });

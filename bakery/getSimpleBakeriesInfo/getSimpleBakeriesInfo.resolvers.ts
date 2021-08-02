@@ -70,7 +70,7 @@ const GetSimpleBakeriesInfoQuery: Resolvers = {
             //1최신 2 인기 3 리뷰순
             ...(sortFilterId == "1" && { createdAt: "desc" }),
             ...(sortFilterId == "2" && {
-              dibedUsers: { _count: "desc" },
+              gotDibsUsers: { _count: "desc" },
             }),
             // ...(sortFilterId == "3" && { price: "asc" }),
           },

@@ -37,7 +37,7 @@ const ToggleDibsBakeryMutation: Resolvers = {
           const userAlreadyDibed = await client.bakery.findFirst({
             where: {
               id: bakeryId,
-              dibedUsers: {
+              gotDibsUsers: {
                 some: {
                   id: loggedInUser?.id,
                 },

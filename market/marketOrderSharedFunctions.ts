@@ -53,7 +53,7 @@ export const getSimpleMarketOrdersInfoModule = async (
     orderBy: {
       // 1최신 2인기 3마감임박순
       ...(args.sortFilterId == "1" && { createdAt: "desc" }),
-      ...(args.sortFilterId == "2" && { dibedUsers: { _count: "desc" } }),
+      ...(args.sortFilterId == "2" && { gotDibsUsers: { _count: "desc" } }),
       ...(args.sortFilterId == "3" && { orderEndDate: "asc" }),
     },
   });

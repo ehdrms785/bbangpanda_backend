@@ -1,7 +1,12 @@
 import { gql } from "apollo-server-core";
 
 export default gql`
+  type BreadDetailResponse {
+    bread: Bread!
+    bakery: Bakery!
+    gotDibsUserCount: Int!
+  }
   type Query {
-    breadDetail(breadId: Int!): Bread
+    getBreadDetail(breadId: Int!): BreadDetailResponse
   }
 `;

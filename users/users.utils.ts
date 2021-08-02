@@ -5,6 +5,7 @@ import crypto from "crypto-js";
 import bcrypt from "bcrypt";
 import admin from "firebase-admin";
 import ms from "ms";
+import { makeErrorMessage } from "../shared/shared.utils";
 
 // import {MutationResponse} from "../types";
 
@@ -61,7 +62,7 @@ export const protectResolver =
         } else {
           return {
             ok: false,
-            error: "You need to login",
+            error: makeErrorMessage('X01000', '로그인이 필요합니다.')
           };
         }
       }

@@ -57,7 +57,7 @@
 //     orderBy: {
 //       //1최신 2 인기 3 저가 4리뷰
 //       ...(sortFilterId == "1" && { createdAt: "desc" }),
-//       ...(sortFilterId == "2" && { dibedUsers: { _count: "desc" } }),
+//       ...(sortFilterId == "2" && { gotDibsUsers: { _count: "desc" } }),
 //       ...(sortFilterId == "3" && { price: "asc" }),
 //     },
 //   });

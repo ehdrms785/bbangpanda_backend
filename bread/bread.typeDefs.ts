@@ -7,11 +7,13 @@ export default gql`
     name: String!
     bakeryName: String
     price: Int!
+    costPrice: Int!
     discount: Int!
     description: String
     detailDescription: String
     isSigniture: Boolean!
     isMine: Boolean!
+    isGotDibs: Boolean!
     breadFeatures: [BreadFeature]
     createdAt: String!
     updatedAt: String!

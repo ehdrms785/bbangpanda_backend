@@ -12,6 +12,8 @@ const GetBakeryDetailQuery: Resolvers = {
           id: bakeryId,
         },
         select: {
+          id: true,
+          thumbnail: true,
           name: true,
           bakeryFeatures: true,
           description: true,
@@ -22,19 +24,20 @@ const GetBakeryDetailQuery: Resolvers = {
       // console.log("\n\n 베이커리 디테일 Result \n\n");
       // console.log(bakeryResult);
 
-      const dibedUserCount = await client.user.count({
+      const gotDibsUserCount = await client.user.count({
         where: {
           dibsBakeries: {
             some: {
               id: bakeryId,
             },
+            
           },
         },
       });
 
       const bakeryDetaiLResonpse = {
         bakery: { ...bakeryResult },
-        dibedUserCount: dibedUserCount,
+        gotDibsUserCount: gotDibsUserCount,
       };
       console.log(bakeryDetaiLResonpse);
 

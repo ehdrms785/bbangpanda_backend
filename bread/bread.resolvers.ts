@@ -1,3 +1,4 @@
+import client from "../client";
 import { Resolvers } from "../types";
 
 const BreadResolvers: Resolvers = {
@@ -27,6 +28,23 @@ const BreadResolvers: Resolvers = {
           },
         })
         .breadFeatures(),
+        isGotDibs: async({id}, _, {loggedInUser}) => {
+          const isGotDibs = await client.bread.findFirst({
+            where: {
+              id,
+              gotDibsUsers: {
+                some: {
+                  id: loggedInUser?.id
+                }
+              },
+            },
+            select: {
+              id: true
+            }
+          });
+
+          return Boolean(isGotDibs);
+        }
   },
 };
 
