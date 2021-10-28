@@ -18,7 +18,7 @@ const CreateOrderListMutation: Resolvers = {
           shippingFee?: number;
           discountAmount?: number;
         },
-        { client, loggedInUser }
+        { client }
       ) => {
         if (!breadIdList || breadIdList.length === 0) {
           return {
@@ -31,14 +31,14 @@ const CreateOrderListMutation: Resolvers = {
         }
         client.orderList.create({
           data: {
-            id: 1213,
+            // id: 1213,
             orderList: {
               connect: {},
               create: {
-                orderNumber: 1,
-                payAmount: 1,
-                shippingFee: 1,
-                discountAmount: 1,
+                orderNumber: 1, // Need to update orderNumber Logic
+                payAmount: payAmount,
+                shippingFee: shippingFee,
+                discountAmount: discountAmount,
               },
             },
           },

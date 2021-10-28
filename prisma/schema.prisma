@@ -77,7 +77,7 @@ model Bakery {
   createdAt         DateTime        @default(now())
   updatedAt         DateTime        @updatedAt
   owner             User?           @relation("ownBakery", fields: [ownerId], references: [id])
-  ownerId           Int?
+  ownerId           Int?            @unique
   breads            Bread[]         @relation("bakeryToBread")
   gotDibsUsers      User[]          @relation("Users_dibsBakery")
   bakeryFeatures    BakeryFeature[]
@@ -121,7 +121,7 @@ model CartBread {
 }
 
 model Order {
-  orderNumber    Int        @id
+  orderNumber    Int        @id @default(autoincrement())
   payAmount      Int
   discountAmount Int        @default(0)
   shippingFee    Int

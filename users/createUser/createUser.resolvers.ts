@@ -4,7 +4,6 @@ import admin from "firebase-admin";
 import {
   calcExpiredTime,
   convertPhoneNumber,
-  encryptToken,
   getCustomToken,
   getRefreshToken,
   hashingPassword,

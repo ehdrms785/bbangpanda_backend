@@ -6,7 +6,6 @@ import {
   getRefreshToken,
   verifyToken,
   userRefTokenKeyUpdate,
-  protectResolver,
   calcExpiredTime,
 } from "../users.utils";
 import { TokenExpiredError } from "jsonwebtoken";

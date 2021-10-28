@@ -4,16 +4,13 @@ const SharedResolvers: Resolvers = {
   Mutation: {
     sendSms: (_, { phonenumber }: { phonenumber: string }, __) => {
       var CryptoJS = require("crypto-js");
-      var SHA256 = require("crypto-js/sha256");
-      var Base64 = require("crypto-js/enc-base64");
-
       var user_auth_number = generateRandomCode(4);
       console.log(`auth_number: ${user_auth_number}`);
       var resultCode = 404;
       var request = require("request");
-      var serviceId = "ncp:sms:kr:267355636549:bpd_sms";
-      var secretKey = "xOIBHPGsgPz49DzsQRRAqyrx78jwUePEDkf54Dx8";
-      var accessId = "M5EBjT4WGgjYSvFjHL88";
+      var serviceId = `${process.env.SMS_SERVICE_ID}`;
+      var secretKey = `${process.env.SMS_SECRET_KEY}`;
+      var accessId = `${process.env.SMS_ACCESS_ID}`;
       const date = Date.now().toString();
       const uri = `https://sens.apigw.ntruss.com/sms/v2/services/${serviceId}/messages`;
       const uri2 = `/sms/v2/services/${serviceId}/messages`;
@@ -46,7 +43,7 @@ const SharedResolvers: Resolvers = {
           body: {
             type: "SMS",
             countryCode: "82",
-            from: "01048880560",
+            from: "01000000000", // Phone Number
             content: `[빵판다] 인증코드: ${user_auth_number}`,
             messages: [
               {

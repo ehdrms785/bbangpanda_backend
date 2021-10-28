@@ -3,7 +3,6 @@ import { Resolvers } from "../../types";
 import {
   calcExpiredTime,
   comparePassword,
-  encryptToken,
   getCustomToken,
   getRefreshToken,
   refTokenExtractKey,
