@@ -12,6 +12,7 @@ export default gql`
     signitureBreads: [Bread]
     isMine: Boolean!
     isGotDibs: Boolean!
+    gotDibsUserCount: Int
     bakeryFeatures: [BakeryFeature]
     breadLargeCategories: [BreadLargeCategory]
     breadSmallCategories: [BreadSmallCategory]

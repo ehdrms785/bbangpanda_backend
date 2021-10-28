@@ -105,6 +105,10 @@ const CreateUserMutation: Resolvers = {
             address,
             phonenumber,
             password: hashedPassword,
+            dibsDrawerList: {
+              create: {
+              }
+            }
           },
           select: {
             id: true,

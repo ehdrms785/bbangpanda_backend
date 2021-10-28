@@ -56,6 +56,15 @@ const BakeryResolvers: Resolvers = {
           },
         },
       }),
+    gotDibsUserCount: ({id}, _, {client})=> client.user.count({
+      where: {
+        dibsBakeries: {
+          some: {
+            id: id
+          }
+        }
+      }
+    })
   },
 };
 

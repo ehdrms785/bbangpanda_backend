@@ -3,7 +3,7 @@ import { Resolvers } from "../../types";
 
 const GetBreadDetailQuery: Resolvers = {
   Query: {
-    getBreadDetail: async (_, { breadId }: { breadId: number }, { client }) => {
+    getBreadDetail: async (_, { breadId }: { breadId: number }, { client,loggedInUser}) => {
       
 
       const breadResult = await client.bread.findUnique({
@@ -37,21 +37,20 @@ const GetBreadDetailQuery: Resolvers = {
           bakeryFeatures: true
         }
       });
-      const gotDibsUserCount = await client.user.count({
-        where: {
-          dibsBreads: {
-            some: {
-              id: breadId
-            }
-          }
-        }
-      });
-      
+      // const gotDibsUserCount = await client.user.count({
+      //   where: {
+      //     dibsBreads: {
+      //       some: {
+      //         id: breadId
+      //       }
+      //     }
+      //   }
+      // })
+
 
       return {
         bread: {...breadResult},
         bakery: {...bakeryResult},
-        gotDibsUserCount: gotDibsUserCount,
       };
     }
   },

@@ -64,7 +64,7 @@ model Bread {
 
   marketOrders               MarketOrder[]
   marketOrderSignitureBreads MarketOrder[] @relation("MarketOrderSignitureBreads")
-  dibsDrawer                 DibsDrawer[]
+  dibsDrawers                DibsDrawer[]  @relation("DibsDrawers_Bread_Relation")
 }
 
 model Bakery {
@@ -206,7 +206,9 @@ model DibsDrawerList {
 model DibsDrawer {
   id               Int             @id @default(autoincrement())
   name             String
-  item             Bread[]
+  item             Bread[]         @relation("DibsDrawers_Bread_Relation")
   dibsDrawerList   DibsDrawerList? @relation(fields: [dibsDrawerListId], references: [id])
   dibsDrawerListId Int?
+  createdAt        DateTime        @default(now())
+
 }

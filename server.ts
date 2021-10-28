@@ -10,6 +10,11 @@ import { getUser } from "./users/users.utils";
 import "./firebase/firebase_admin";
 const PORT = process.env.PORT;
 
+setTimeout(() => {
+  console.log(Date.now()/1000);
+  setTimeout(() => { console.log(Date.now()/1000)},2000);
+}, 2000);
+
 const apollo = new ApolloServer({
   typeDefs,
   resolvers,
@@ -20,9 +25,11 @@ const apollo = new ApolloServer({
       authorization = req.headers.authorization || "";
       // console.log(authorization);
       // console.log("접속시도 끝");
+     
     } else {
       authorization = connection?.context.authorization || "";
     }
+   
     return {
       loggedInUser: await getUser(authorization),
       client,

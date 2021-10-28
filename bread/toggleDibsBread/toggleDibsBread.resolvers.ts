@@ -8,6 +8,8 @@ const toggleDibsBreadMutation: Resolvers = {
         toggleDibsBread: protectResolver(async (_, { breadId }: { breadId: number }, { client, loggedInUser }) => {
 
 
+           try {
+               console.log('ToggleGidbsBread!');
             const existUser = await client.user.findFirst({
                 where: {
                     id: loggedInUser?.id
@@ -71,6 +73,12 @@ const toggleDibsBreadMutation: Resolvers = {
             return {
                 ok: true
             };
+           } catch(err) {
+               return {
+                   ok: false,
+                   error: makeErrorMessage('X00','토글딥스브레드 에러발생')
+               }
+           }
 
         }
         )

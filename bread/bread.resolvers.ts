@@ -44,7 +44,15 @@ const BreadResolvers: Resolvers = {
           });
 
           return Boolean(isGotDibs);
-        }
+        },
+      gotDibsUserCount: ({id}, _, {client}) => client.user.count({where: {
+          dibsBreads: {
+              some: {
+                  id: id
+              }
+            }
+          }
+        })
   },
 };
 

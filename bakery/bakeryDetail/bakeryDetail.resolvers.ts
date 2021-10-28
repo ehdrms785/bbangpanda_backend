@@ -5,7 +5,7 @@ const GetBakeryDetailQuery: Resolvers = {
     getBakeryDetail: async (
       _,
       { bakeryId }: { bakeryId: number },
-      { client }
+      { client,loggedInUser }
     ) => {
       const bakeryResult = await client.bakery.findUnique({
         where: {
@@ -24,24 +24,17 @@ const GetBakeryDetailQuery: Resolvers = {
       // console.log("\n\n 베이커리 디테일 Result \n\n");
       // console.log(bakeryResult);
 
-      const gotDibsUserCount = await client.user.count({
-        where: {
-          dibsBakeries: {
-            some: {
-              id: bakeryId,
-            },
-            
-          },
-        },
-      });
-
-      const bakeryDetaiLResonpse = {
-        bakery: { ...bakeryResult },
-        gotDibsUserCount: gotDibsUserCount,
-      };
-      console.log(bakeryDetaiLResonpse);
-
-      return bakeryDetaiLResonpse;
+      // const gotDibsUserCount = await client.user.count({
+      //   where: {
+      //     dibsBakeries: {
+      //       some: {
+      //         id: bakeryId
+      //       }
+      //     }
+      //   }
+      // })
+    
+      return bakeryResult;
     },
   },
 };

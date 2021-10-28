@@ -14,6 +14,7 @@ export default gql`
     isSigniture: Boolean!
     isMine: Boolean!
     isGotDibs: Boolean!
+    gotDibsUserCount: Int
     breadFeatures: [BreadFeature]
     createdAt: String!
     updatedAt: String!

@@ -7,7 +7,7 @@ const toggleDibsBakeryMutation: Resolvers = {
     Mutation: {
         toggleDibsBakery: protectResolver(async (_, { bakeryId }: { bakeryId: number }, { client, loggedInUser }) => {
 
-
+            console.log("toggleDibsBakery!");
             const existUser = await client.user.findFirst({
                 where: {
                     id: loggedInUser?.id

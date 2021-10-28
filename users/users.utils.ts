@@ -45,6 +45,7 @@ export const getUser = async (accessToken: string | undefined) => {
       console.log("토큰 인증 불가");
       return null;
     }
+    console.log("getUser 에러 발생");
     console.log(err);
     return null;
   }
@@ -55,8 +56,10 @@ export const protectResolver =
   async (root, args, context, info) => {
     try {
       console.log("여기는 오나?");
-      if (!context.loggedInUser) {
+      if (context.loggedInUser == null) {
         let isQuery = info.operation.operation === "query";
+        console.log(isQuery);
+
         if (isQuery) {
           return null;
         } else {
@@ -96,8 +99,15 @@ export const decryptToken = (token: string) => {
 };
 
 export const calcExpiredTime = (time_format_ms: string): number => {
+  console.log("시간결과검사");
+  console.log(Date.now());
+  console.log(ms(time_format_ms));
+  console.log((Date.now() + ms(time_format_ms)));
+  console.log((Date.now() + ms(time_format_ms)) / 1000);
+  console.log(Math.floor((Date.now() + ms(time_format_ms)) / 1000));
   return Math.floor((Date.now() + ms(time_format_ms)) / 1000);
-};
+};1628562725 
+
 export const getCustomToken = async (id: number): Promise<string> => {
   return admin.auth().createCustomToken(id.toString());
 };
